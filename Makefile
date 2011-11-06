@@ -32,23 +32,29 @@ run: iso
 # Targets - Build
 all: kernel loader libc libposix root
 
-kernel:
+directories:
+	@ mkdir -p $(BUILD_DIR)/kernel/inc
+	@ mkdir -p $(BUILD_DIR)/kernel/bin
+	@ mkdir -p $(BUILD_DIR)/user/inc
+	@ mkdir -p $(BUILD_DIR)/user/bin
+
+kernel: directories
 	@ echo " Building kernel..."
 	@ $(MAKE) -C kernel/ all
 	
-loader: kernel
+loader: directories kernel
 	@ echo " Building loader..."
 	@ $(MAKE) -C loader/ all
 	
-libc:
+libc: directories
 	@ echo " Building libc..."
 	@ $(MAKE) -C libc/ all
 	
-libposix: libc
+libposix: directories libc
 	@ echo " Building libposix..."
 	@ $(MAKE) -C libposix/ all
 	
-root: libc libposix
+root: directories libc libposix
 	@ echo " Building root..."
 	@ $(MAKE) -C root/ all
 	
@@ -59,7 +65,5 @@ clean:
 	@ $(MAKE) -C libc/ clean
 	@ $(MAKE) -C libposix/ clean
 	@ $(MAKE) -C root/ clean
-	@ rm -R $(BUILD_DIR)/kernel/inc/*
-	@ rm -R $(BUILD_DIR)/kernel/bin/*
-	@ rm -R $(BUILD_DIR)/user/inc/*
-	@ rm -R $(BUILD_DIR)/user/bin/*
+	@ rm -R $(BUILD_DIR)/*
+	@ rm $(ISO_BIN_DIR)/*.bin
