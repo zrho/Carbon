@@ -1,0 +1,6 @@
+default 0
+
+title Oxygen OS
+kernel /boot/loader.bin
+module /boot/kernel.bin
+module /boot/root.bin

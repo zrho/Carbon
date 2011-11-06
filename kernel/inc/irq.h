@@ -1,0 +1,53 @@
+/**
+ * Carbon Operating System
+ * Copyright (C) 2011 Lukas Heidemann
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#pragma once
+#include <api/types.h>
+#include <cpu.h>
+#include <irq.h>
+
+//- Programmable Interrupt Controller ------------------------------------------
+
+#define IRQ_OFFSET 0x30
+
+void irq_pic_init(void);
+void irq_pic_disable(void);
+
+void irq_pic_eoi(uint8_t index);
+
+void irq_pic_mask(uint8_t index);
+void irq_pic_unmask(uint8_t index);
+
+//- Programmable Interrupt Timer (IRQ 0) ---------------------------------------
+
+// IRQ index of the PIT
+#define IRQ_PIT_INDEX 0
+
+// Interrupt vector for PIT
+#define IRQ_PIT_VECTOR (IRQ_OFFSET + IRQ_PIT_INDEX)
+
+// Frequency of the PIT in Hertz
+#define IRQ_PIT_FREQ 256
+
+// Type for timer ticks
+typedef uint64_t time_t;
+
+void irq_pit_init(void);
+void irq_pit_handler(cpu_int_state_t *state);
+
+time_t irq_pit_ticks(void);
