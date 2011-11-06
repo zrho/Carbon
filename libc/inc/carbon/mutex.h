@@ -18,6 +18,7 @@
 
 #pragma once
 #include <stdbool.h>
+#include <carbon/futex.h>
 
 //- API - Multitasking - Synchronization ---------------------------------------
 
