@@ -30,7 +30,7 @@
 /**
  * The number of defined system calls.
  */
-#define SYSCALL_COUNT 41
+#define SYSCALL_COUNT 55
 
 /**
  * Type for system call handlers.
@@ -200,6 +200,35 @@ void syscall_process_kill(cpu_int_state_t *state);
  *  * RBX The new process's id.
  */
 void syscall_process_create(cpu_int_state_t *state);
+
+//- System Calls - Synchronization - Futex -------------------------------------
+
+/**
+ * System Call: Compares the futex with a given value and wakes a given number
+ * or all threads waiting on it, when they are equal.
+ *
+ * Input:
+ *  * RSI The address of the futex.
+ *  * RBX The value to compare with.
+ *  * RCX The number of threads to wake. (uint32_t) -1 for all.
+ *
+ * Output:
+ *  * RAX 1 if values were equal, 0 if they weren't.
+ */
+void syscall_futex_wake(cpu_int_state_t *state);
+
+/**
+ * System Call: Compares the futex with a given value and, when they are equal,
+ * waits on it until it is waked by a call to futex_wake.
+ *
+ * Input:
+ *  * RSI The address of the futex.
+ *  * RBX The value to compare with.
+ *
+ * Output:
+ *  * RAX 1 if the values were equal and the thread has been waked up, 0 otherwise.
+ */
+void syscall_futex_wait(cpu_int_state_t *state);
 
 //- System Calls - Synchronization - Mutex -------------------------------------
 

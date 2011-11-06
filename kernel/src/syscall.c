@@ -77,6 +77,11 @@ static syscall_handler_t _syscall_handlers[] = {
         // 40 - 47
         &syscall_debug,
         &syscall_debug_hex,
+        0, 0, 0, 0, 0, 0,
+
+        // 48 - 55
+        &syscall_futex_wake,
+        &syscall_futex_wait,
         0, 0, 0, 0, 0, 0
 };
 

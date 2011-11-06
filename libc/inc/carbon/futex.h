@@ -16,29 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
-#include <carbon/memory.h>
-#include <carbon/ipc.h>
-#include <carbon/process.h>
+#pragma once
+#include <stdint.h>
+#include <stdbool.h>
 
-void memory_map(uintptr_t virt, uintptr_t phys, uint8_t flags, pid_t pid) {
-	// Allocate buffer
-	memory_map_req_t *req = (memory_map_req_t *) ipc_buffer_size(
-			IPC_BUFFER_SEND, sizeof(memory_map_req_t));
+//- API - Futex ----------------------------------------------------------------
 
-	// Fill request
-	req->header.api_low = MEMORY_API_LOW;
-	req->header.api_high = MEMORY_API_HIGH;
-	req->header.procedure = MEMORY_PROC_MAP;
+typedef uint32_t futex_t;
 
-	req->virtual = (uint64_t) virt;
-	req->physical = (uint64_t) phys;
-	req->flags = flags;
-	req->pid = pid;
-
-	// Send message
-	ipc_send(
-			sizeof(memory_map_req_t),
-			IPC_FLAG_IGNORE_RESPONSE,
-			process_parent_id());
-}
+bool futex_wake(futex_t *futex, futex_t value, size_t threads);
+bool futex_wait(futex_t *futex, futex_t value);

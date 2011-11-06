@@ -22,18 +22,19 @@
 
 //- Constants ------------------------------------------------------------------
 
-#define THREAD_ROLE_NORMAL       0
-#define THREAD_ROLE_IPC_RECEIVER 1
+#define THREAD_ROLE_NORMAL          0
+#define THREAD_ROLE_IPC_RECEIVER    1
 
-#define THREAD_FLAG_TERMINATED   (1 << 0)
-#define THREAD_FLAG_DETACHED     (1 << 1)
+#define THREAD_FLAG_TERMINATED      (1 << 0)
+#define THREAD_FLAG_DETACHED        (1 << 1)
 
-#define THREAD_SLEEP_JOIN        1
-#define THREAD_SLEEP_MUTEX		 2
+#define THREAD_SLEEP_JOIN           1
+#define THREAD_SLEEP_MUTEX		    2
+#define THREAD_SLEEP_FUTEX          3
 
-#define THREAD_TTL_GAIN          2
+#define THREAD_TTL_GAIN             2
 
-#define PROCESS_TERM_THREADS    (1 << 0)
+#define PROCESS_TERM_THREADS        (1 << 0)
 
 //- Multitasking Structures ----------------------------------------------------
 
