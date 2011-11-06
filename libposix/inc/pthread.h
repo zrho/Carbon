@@ -67,7 +67,7 @@ struct sched_param
 
 #define _POSIX_THREADS
 //#define _POSIX_READER_WRITER_LOCKS
-//#define _POSIX_SPIN_LOCKS
+#define _POSIX_SPIN_LOCKS
 //#define _POSIX_BARRIERS
 //#define _POSIX_THREAD_SAFE_FUNCTIONS
 //#define _POSIX_THREAD_ATTR_STACKSIZE
@@ -258,12 +258,10 @@ typedef struct pthread_rwlock pthread_rwlock_t;
 
 #define SPINLOCK_UNLOCKED    1
 #define SPINLOCK_LOCKED      2
-#define SPINLOCK_USEMUTEX    3
 
 struct pthread_spinlock
 {
-  int interlock;
-  pthread_mutex_t mutex;
+  int lock;
 };
 
 typedef struct pthread_spinlock pthread_spinlock_t;
