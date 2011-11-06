@@ -22,11 +22,12 @@
 #include <memory.h>
 #include <debug.h>
 
-//- TSS ------------------------------------------------------------------------
-
 extern uint8_t stack_runtime_top;
 extern void cpu_tss_load(void);
 
+/**
+ * Creates and loads a Task State Segment.
+ */
 void cpu_tss_create(void) {
     // Create TSS
     cpu_tss_t *tss = (cpu_tss_t *) heap_alloc(sizeof(cpu_tss_t));

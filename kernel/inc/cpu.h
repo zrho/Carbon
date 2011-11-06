@@ -20,7 +20,9 @@
 #include <api/types.h>
 #include <api/compiler.h>
 
-//- State ----------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// States
+//------------------------------------------------------------------------------
 
 typedef struct cpu_state_t {
     uint64_t r15;
@@ -40,8 +42,6 @@ typedef struct cpu_state_t {
     uint64_t rax;
 } PACKED cpu_state_t;
 
-//- Interrupts -----------------------------------------------------------------
-
 typedef struct cpu_int_state_t {
 
     // State of the CPU
@@ -57,6 +57,36 @@ typedef struct cpu_int_state_t {
 
 } PACKED cpu_int_state_t;
 
+//------------------------------------------------------------------------------
+// Interrupts
+//------------------------------------------------------------------------------
+
+// An entry of the Interrupt Descriptor Table.
+typedef struct cpu_int_entry_t
+{
+    // The lowest 2 bytes of the offset.
+    uint16_t offsetLow;
+
+    // The code segment selector.
+    uint16_t cs;
+
+    // Always zero.
+    uint8_t zero0;
+
+    // Flags and types.
+    uint8_t flags;
+
+    // Middle 2 bytes of the offset.
+    uint16_t offsetMiddle;
+
+    // Highest 4 bytes of the offset.
+    uint32_t offsetHigh;
+
+    // Always zero.
+    uint32_t zero1;
+
+} PACKED cpu_int_entry_t;
+
 // Callback for interrupt handlers
 typedef void (* cpu_int_handler_t)(cpu_int_state_t *);
 
@@ -66,7 +96,9 @@ void cpu_int_disable(void);
 
 void cpu_int_register(uint8_t vector, cpu_int_handler_t callback);
 
-//- TSS ------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Task State Segment (TSS)
+//------------------------------------------------------------------------------
 
 #define TSS_GDT_OFFSET 0x28
 

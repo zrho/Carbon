@@ -39,6 +39,14 @@ static bool _binary_verify_elf64(Elf64_Ehdr *header) {
         header->e_ident[EI_VERSION] == EV_CURRENT;
 }
 
+/**
+ * Loads an ELF64 executable binary in the current address space (without
+ * shared libraries).
+ *
+ * @param binary The ELF64 binary to load.
+ * @param pflags The flags to set for mapped pages.
+ * @return The entry point of the ELF64 binary.
+ */
 uint64_t binary_load_elf64(void *binary, uint16_t pflags) {
     // Get ELF header
     Elf64_Ehdr *header = (Elf64_Ehdr *) binary;

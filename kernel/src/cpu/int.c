@@ -18,57 +18,28 @@
 
 #include <api/types.h>
 #include <api/string.h>
-
 #include <cpu.h>
-#include <memory.h>
 #include <debug.h>
 
-//- Interrupt Descriptor Table -------------------------------------------------
-
-// An entry of the Interrupt Descriptor Table.
-typedef struct cpu_int_entry_t
-{
-    // The lowest 2 bytes of the offset.
-    uint16_t offsetLow;
-    
-    // The code segment selector.
-    uint16_t cs;
-    
-    // Always zero.
-    uint8_t zero0;
-    
-    // Flags and types.
-    uint8_t flags;
-    
-    // Middle 2 bytes of the offset.
-    uint16_t offsetMiddle;
-    
-    // Highest 4 bytes of the offset.
-    uint32_t offsetHigh;
-    
-    // Always zero.
-    uint32_t zero1;
-    
-} PACKED cpu_int_entry_t;
-
-//- Interrupts -----------------------------------------------------------------
-
+extern cpu_int_handler_t cpu_int_handlers;
 extern cpu_int_handler_t cpu_int_handlers;
 extern uintptr_t cpu_int_stubs;
 extern cpu_int_entry_t cpu_int_idt;
-
 extern void cpu_int_lidt(void);
 
+/**
+ * Initializes interrupt handling by preparing and loading the IDT.
+ */
 void cpu_int_init() {
     // Clear handler table
     memset(
-	   (void *) &cpu_int_handlers,
-	   0, sizeof(uintptr_t) * 256);
+       (void *) &cpu_int_handlers,
+       0, sizeof(uintptr_t) * 256);
 
     // Clear IDT
     memset(
-	   (void *) &cpu_int_idt,
-	   0, sizeof(cpu_int_entry_t) * 256);
+       (void *) &cpu_int_idt,
+       0, sizeof(cpu_int_entry_t) * 256);
 
     // Set IDT entries
     size_t vector;
@@ -88,10 +59,15 @@ void cpu_int_init() {
     cpu_int_lidt();
 }
 
-inline void cpu_int_register(uint8_t vector, cpu_int_handler_t callback) {
-    (&cpu_int_handlers)[vector] = callback;
-}
-
+/**
+ * Handles an interrupt by dispatching it to the correct handler.
+ *
+ * Called by cpu_int_handler_common.
+ *
+ * @todo: Move the #PF and #GP handlers to separate handler function.
+ * @param state The state the processor has been interrupted in. May be modified
+ *  to alter the return state.
+ */
 void cpu_int_handle(cpu_int_state_t *state);
 void cpu_int_handle(cpu_int_state_t *state) {
     // TODO: Make this faster!
@@ -114,3 +90,15 @@ void cpu_int_handle(cpu_int_state_t *state) {
 
     handler(state);
 }
+
+/**
+ * Registers an interrupt handler for the given vector.
+ *
+ * @param vector The vector to register the handler for.
+ * @param callback The handler to register for the given vector.
+ */
+inline void cpu_int_register(uint8_t vector, cpu_int_handler_t callback) {
+    (&cpu_int_handlers)[vector] = callback;
+}
+
+

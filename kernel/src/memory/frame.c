@@ -30,11 +30,26 @@ typedef struct frame_stack_t {
 	struct frame_stack_t *next;
 } PACKED frame_stack_t;
 
+/**
+ * A 4kB heap for storing the first 256 frames until the real heap is ready.
+ */
 extern frame_stack_t frame_alloc_init;
+
+/**
+ * The number of frames that have been allocated from the frame_alloc_init heap.
+ */
 static uint64_t frame_alloc_count = 0;
 
+/**
+ * Stack of free frames.
+ */
 static frame_stack_t *frame_stack_free = 0;
 
+/**
+ * Initializes the frame heap.
+ *
+ * @param info The boot info table.
+ */
 void frame_init(boot_info_t *info) {
 	// Page align free_mem_begin
 	uintptr_t mem_begin = memalign(info->free_mem_begin, 0x1000);
@@ -64,6 +79,11 @@ void frame_init(boot_info_t *info) {
 	}
 }
 
+/**
+ * Allocates a 4kB chunk of physical memory.
+ *
+ * @return Physical address of allocated chunk.
+ */
 uintptr_t frame_alloc(void) {
 	// Out of memory?
 	if (0 == frame_stack_free)
@@ -83,6 +103,11 @@ uintptr_t frame_alloc(void) {
     return address;
 }
 
+/**
+ * Frees a chunk of physical memory.
+ *
+ * @param addr Physical address of chunk to free.
+ */
 void frame_free(uintptr_t addr) {
 	// Init allocation page?
 	frame_stack_t *frame;
