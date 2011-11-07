@@ -24,5 +24,12 @@
 
 typedef uint32_t futex_t;
 
-bool futex_wake(futex_t *futex, size_t threads);
+void futex_wake(futex_t *futex, size_t threads);
 bool futex_wait(futex_t *futex, futex_t value);
+
+bool futex_cmp_requeue(
+        futex_t *futex,
+        futex_t value,
+        size_t wakeup,
+        futex_t *target,
+        size_t transfer);

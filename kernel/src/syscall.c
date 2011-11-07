@@ -82,7 +82,8 @@ static syscall_handler_t _syscall_handlers[] = {
         // 48 - 55
         &syscall_futex_wake,
         &syscall_futex_wait,
-        0, 0, 0, 0, 0, 0
+        &syscall_futex_cmp_requeue,
+        0, 0, 0, 0, 0
 };
 
 void syscall_handler_int(cpu_int_state_t *state) {

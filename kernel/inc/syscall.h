@@ -221,9 +221,25 @@ void syscall_futex_wake(cpu_int_state_t *state);
  *  * RBX The value to compare with.
  *
  * Output:
- *  * RAX 1 if the values were equal and the thread has been waked up, 0 otherwise.
+ *  * RAX 1 if the values were equal, 0 otherwise.
  */
 void syscall_futex_wait(cpu_int_state_t *state);
+
+/**
+ * System Call: Compares the futex with a given value and, when they are equal,
+ * wakes n waiting threads and transfers m waiting threads to another futex.
+ *
+ * Input:
+ *   * RSI The address of the futex.
+ *   * RDI The address of the futex to transfer the threads to.
+ *   * RBX The value to compare with.
+ *   * RCX The number of threads to wake.
+ *   * RDX The number of threads to transfer.
+ *
+ * Output:
+ *   * RAX 1 if the values were equal, 0 otherwise.
+ */
+void syscall_futex_cmp_requeue(cpu_int_state_t *state);
 
 //- System Calls - Synchronization - Mutex -------------------------------------
 
