@@ -34,8 +34,6 @@ futex_cmp_requeue:
 	; System call number
 	mov rax, 50
 
-	xchg bx, bx
-
 	; Parameters
 	xchg r9, rdi
 	xchg r10, rsi
@@ -48,8 +46,6 @@ futex_cmp_requeue:
 	xchg rcx, r11
 	xchg rdi, r12
 	xchg rdx, r13
-
-	xchg bx, bx
 
 	; Call kernel
 	int 0x80
