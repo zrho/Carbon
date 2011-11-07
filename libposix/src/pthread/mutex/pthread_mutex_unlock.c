@@ -22,7 +22,7 @@
 
 int pthread_mutex_unlock(pthread_mutex_t *mutex) {
 	// Lock structure
-	mutex_spin(&mutex->lock_struct);
+	mutex_lock(&mutex->lock_struct);
 
 	// Recursive?
 	if (PTHREAD_MUTEX_RECURSIVE == mutex->kind) {
@@ -37,8 +37,8 @@ int pthread_mutex_unlock(pthread_mutex_t *mutex) {
 	}
 
 	// Unlock
-	mutex_free(&mutex->lock);
-	mutex_free(&mutex->lock_struct);
+	mutex_unlock(&mutex->lock);
+	mutex_unlock(&mutex->lock_struct);
 
 	return 0;
 }

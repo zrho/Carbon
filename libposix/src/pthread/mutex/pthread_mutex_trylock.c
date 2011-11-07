@@ -22,7 +22,7 @@
 
 int pthread_mutex_trylock(pthread_mutex_t *mutex) {
 	// Lock structure
-	mutex_spin(&mutex->lock_struct);
+	mutex_lock(&mutex->lock_struct);
 
 	// Locked?
 	bool locked = false;
@@ -39,7 +39,7 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex) {
 	}
 
 	// Unlock structure
-	mutex_free(&mutex->lock_struct);
+	mutex_unlock(&mutex->lock_struct);
 
 	return locked;
 }

@@ -23,12 +23,12 @@
 
 int pthread_mutex_lock(pthread_mutex_t *mutex) {
 	// Lock structure
-	mutex_spin(&mutex->lock_struct);
+	mutex_lock(&mutex->lock_struct);
 
 	// Normal?
 	if (PTHREAD_MUTEX_NORMAL == mutex->kind) {
 		// Simply wait to acquire lock
-		mutex_spin(&mutex->lock);
+		mutex_lock(&mutex->lock);
 
 	// Currently locked?
 	} else if (!mutex_trylock(&mutex->lock)) {
@@ -38,24 +38,24 @@ int pthread_mutex_lock(pthread_mutex_t *mutex) {
 			// Recursive?
 			if (PTHREAD_MUTEX_RECURSIVE == mutex->kind) {
 				++mutex->recursion;
-				mutex_free(&mutex->lock_struct);
+				mutex_unlock(&mutex->lock_struct);
 				return 0;
 
 			} else {// must be errorcheck
-				mutex_free(&mutex->lock_struct);
+				mutex_unlock(&mutex->lock_struct);
 				return EDEADLCK;
 			}
 		}
 
 		// Unlock structure
-		mutex_free(&mutex->lock_struct);
+		mutex_unlock(&mutex->lock_struct);
 
 		// Wait to acquire lock
 		// (Looks like a racing condition first, but what is actually
 		//  happening at this point is irrelevant, as long as the current
 		//  thread does not lock the mutex. Threads can not be interrupted
 		//  so we know exactly that this won't happen)
-		mutex_spin(&mutex->lock);
+		mutex_lock(&mutex->lock);
 
 		// Set owner
 		mutex->owner = pthread_self();
@@ -67,7 +67,7 @@ int pthread_mutex_lock(pthread_mutex_t *mutex) {
 	mutex->owner = pthread_self();
 
 	// Unlock structure
-	mutex_free(&mutex->lock_struct);
+	mutex_lock(&mutex->lock_struct);
 
 	return 0;
 }
