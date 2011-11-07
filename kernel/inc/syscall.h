@@ -204,16 +204,11 @@ void syscall_process_create(cpu_int_state_t *state);
 //- System Calls - Synchronization - Futex -------------------------------------
 
 /**
- * System Call: Compares the futex with a given value and wakes a given number
- * or all threads waiting on it, when they are equal.
+ * System Call: Wakes a given number of threads waiting on the futex.
  *
  * Input:
  *  * RSI The address of the futex.
- *  * RBX The value to compare with.
  *  * RCX The number of threads to wake. (uint32_t) -1 for all.
- *
- * Output:
- *  * RAX 1 if values were equal, 0 if they weren't.
  */
 void syscall_futex_wake(cpu_int_state_t *state);
 

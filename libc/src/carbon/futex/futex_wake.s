@@ -20,12 +20,11 @@ section .text
 global futex_wake:
 futex_wake:
 	; Store
-	push rbx
+	push rax
 	push rcx
 	push rsi
 	push r8
 	push r9
-	push r10
 
 	; System call number
 	mov rax, 48
@@ -33,20 +32,17 @@ futex_wake:
 	; Parameters
 	xchg r8, rdi
 	xchg r9, rsi
-	xchg r10, rdx
 
 	xchg rsi, r8
-	xchg rbx, r9
-	xchg rcx, r10
+	xchg rcx, r9
 
 	; Call kernel
 	int 0x80
 
-	; Result and Restore
-	pop r10
+	; Restore
 	pop r9
 	pop r8
 	pop rsi
 	pop rcx
-	pop rbx
+	pop rax
 	ret

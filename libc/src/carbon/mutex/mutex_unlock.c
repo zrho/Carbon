@@ -21,5 +21,5 @@
 
 void mutex_unlock(mutex_t *mutex) {
     *mutex = 0;
-    futex_wake((futex_t *) mutex, 0, 1);
+    futex_wake((futex_t *) mutex, 1);
 }
