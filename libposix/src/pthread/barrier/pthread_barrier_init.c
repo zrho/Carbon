@@ -17,14 +17,28 @@
  */
 
 #include <pthread.h>
+#include <errno.h>
 
-int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr) {
-	// Setup mutex
-	mutex->lock = 0;
-	mutex->lock_struct = 0;
-	mutex->recursion = 0;
-	mutex->owner = -1;
-	mutex->kind = (0 != attr) ? attr->kind : PTHREAD_MUTEX_DEFAULT;
+int pthread_barrier_init(
+        pthread_barrier_t *barrier,
+        const pthread_barrierattr_t *attr,
+        unsigned int count) {
+    // Count of zero?
+    if (0 == count)
+        return EINVAL;
 
-	return 0;
+    // Initialize barrier
+    barrier->count_init = count;
+    barrier->count_left = count;
+    barrier->event = 0;
+
+    // Initialize mutex
+    pthread_mutexattr_t mutexattr;
+    pthread_mutexattr_init(&mutexattr);
+    pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_NORMAL);
+
+    pthread_mutex_init(&barrier->lock, &mutexattr);
+
+    pthread_mutexattr_destroy(&mutexattr);
+    return 0;
 }

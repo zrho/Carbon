@@ -70,7 +70,7 @@ struct sched_param
 #define _POSIX_THREADS
 //#define _POSIX_READER_WRITER_LOCKS
 #define _POSIX_SPIN_LOCKS
-//#define _POSIX_BARRIERS
+#define _POSIX_BARRIERS
 //#define _POSIX_THREAD_SAFE_FUNCTIONS
 //#define _POSIX_THREAD_ATTR_STACKSIZE
 //#define _POSIX_THREAD_PRIORITY_SCHEDULING
@@ -212,10 +212,10 @@ typedef struct pthread_barrierattr pthread_barrierattr_t;
 
 struct pthread_barrier
 {
-  unsigned int curr_height;
-  unsigned int init_height;
-  int step;
-  handle_t breeched[2];
+  pthread_mutex_t lock;
+  futex_t event;
+  unsigned int count_left;
+  unsigned int count_init;
 };
 
 typedef struct pthread_barrier pthread_barrier_t;
@@ -371,7 +371,7 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex);
 int pthread_mutex_unlock(pthread_mutex_t *mutex);
 
 //
-// Condition variable attribute functions (0/2+2)
+// Condition variable attribute functions (2/2+2)
 //
 
 int pthread_condattr_init(pthread_condattr_t *attr);
@@ -382,7 +382,7 @@ int pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared);
 #endif
 
 //
-// Condition variable functions (0/6)
+// Condition variable functions (6/6)
 //
 
 int pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr);
@@ -393,7 +393,7 @@ int pthread_cond_signal(pthread_cond_t *cond);
 int pthread_cond_broadcast(pthread_cond_t *cond);
 
 //
-// Barrier attribute functions (0/0+4)
+// Barrier attribute functions (4/4)
 //
 
 #ifdef _POSIX_BARRIERS
@@ -403,7 +403,7 @@ int pthread_barrierattr_getpshared(const pthread_barrierattr_t *attr, int *pshar
 int pthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared);
 
 //
-// Barrier functions (0/0+3)
+// Barrier functions (3/3)
 //
 
 int pthread_barrier_init(pthread_barrier_t *barrier, const pthread_barrierattr_t *attr, unsigned int count);
@@ -437,7 +437,7 @@ int pthread_rwlock_unlock(pthread_rwlock_t *lock);
 #endif
 
 //
-// Spinlock functions (0/0+5)
+// Spinlock functions (5/5)
 //
 
 #ifdef _POSIX_SPIN_LOCKS

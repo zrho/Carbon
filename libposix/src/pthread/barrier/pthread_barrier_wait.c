@@ -17,14 +17,27 @@
  */
 
 #include <pthread.h>
+#include <stdint.h>
 
-int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr) {
-	// Setup mutex
-	mutex->lock = 0;
-	mutex->lock_struct = 0;
-	mutex->recursion = 0;
-	mutex->owner = -1;
-	mutex->kind = (0 != attr) ? attr->kind : PTHREAD_MUTEX_DEFAULT;
+int pthread_barrier_wait(pthread_barrier_t *barrier) {
+    // Lock barrier
+    pthread_mutex_lock(&barrier->lock);
 
-	return 0;
+    // Barrier break?
+    if (0 < --barrier->count_left) {
+        futex_t event = barrier->event;
+        pthread_mutex_unlock(&barrier->lock);
+        do {
+            futex_wait(&barrier->event, event);
+        } while (barrier->event == event);
+
+    } else {
+        ++barrier->event;
+        barrier->count_left = barrier->count_init;
+        futex_wake(&barrier->event, INT32_MAX);
+        pthread_mutex_unlock(&barrier->lock);
+    }
+
+    return 0;
 }
+

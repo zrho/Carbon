@@ -18,13 +18,7 @@
 
 #include <pthread.h>
 
-int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr) {
-	// Setup mutex
-	mutex->lock = 0;
-	mutex->lock_struct = 0;
-	mutex->recursion = 0;
-	mutex->owner = -1;
-	mutex->kind = (0 != attr) ? attr->kind : PTHREAD_MUTEX_DEFAULT;
-
-	return 0;
+int pthread_barrier_destroy(pthread_barrier_t *barrier) {
+    pthread_mutex_destroy(&barrier->lock);
+    return 0;
 }

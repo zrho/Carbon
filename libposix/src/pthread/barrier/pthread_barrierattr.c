@@ -18,13 +18,21 @@
 
 #include <pthread.h>
 
-int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr) {
-	// Setup mutex
-	mutex->lock = 0;
-	mutex->lock_struct = 0;
-	mutex->recursion = 0;
-	mutex->owner = -1;
-	mutex->kind = (0 != attr) ? attr->kind : PTHREAD_MUTEX_DEFAULT;
+int pthread_barrierattr_init(pthread_barrierattr_t *attr) {
+    // Do nothing
+    return 0;
+}
 
-	return 0;
+int pthread_barrierattr_destroy(pthread_barrierattr_t *attr) {
+    // Do nothing
+    return 0;
+}
+
+int pthread_barrierattr_getpshared(const pthread_barrierattr_t *attr, int *pshared) {
+    return attr->pshared;
+}
+
+int pthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared) {
+    attr->pshared = pshared;
+    return 0;
 }
