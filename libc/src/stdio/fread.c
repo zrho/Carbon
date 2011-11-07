@@ -16,15 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#include <stdio.h>
+#include <carbon/mutex.h>
 
-static char __heap[0x1000];
-static uintptr_t __placement = (uintptr_t) &__heap;
+size_t fread(void *ptr, size_t size, size_t count, FILE *stream) {
+    // Lock stream
+    mutex_lock(&stream->lock);
 
-// TODO: Implement real malloc
+    // Read bytes
+    size_t length = size * count;
+    size_t bytes_read = __stdio_read(stream, length, ptr);
+    size_t blocks_read = bytes_read / size;
 
-void *malloc(size_t size) {
-	uintptr_t addr = __placement;
-	__placement += size;
-	return (void *) addr;
+    // Set EOF flag?
+    if (bytes_read < length)
+        stream->flags |= FILE_FLAG_EOF;
+
+    // Unlock stream
+    mutex_unlock(&stream->lock);
+    return blocks_read;
 }

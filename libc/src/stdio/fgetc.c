@@ -16,15 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#include <stdio.h>
 
-static char __heap[0x1000];
-static uintptr_t __placement = (uintptr_t) &__heap;
+int fgetc(FILE *fp) {
+    char c;
 
-// TODO: Implement real malloc
-
-void *malloc(size_t size) {
-	uintptr_t addr = __placement;
-	__placement += size;
-	return (void *) addr;
+    if (1 == fread(&c, 1, sizeof(char), fp))
+        return c;
+    else
+        return -1;
 }

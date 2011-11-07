@@ -21,6 +21,7 @@
 
 #include <carbon/mutex.h>
 #include <carbon/ipc.h>
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -35,20 +36,17 @@ typedef struct __file {
 	// The unique file descriptor
 	uint64_t descriptor;
 
+	// Lock for this file
+	mutex_t lock;
+
 	// Current stream position
 	fpos_t position;
-
-	// Size of the file
-	fpos_t size;
 
 	// Flags (Error/EOF etc.)
 	uint8_t flags;
 
 	// The file's buffer
 	void *buffer;
-
-	// The offset in the buffer.
-	size_t buffer_offset;
 
 	// The current length of the buffer.
 	size_t buffer_len;
@@ -58,6 +56,15 @@ typedef struct __file {
 
 	// The buffer mode
 	uint8_t buffer_mode;
+
+	// Callback for writing to the file
+	void (*callback_write)(struct __file *, fpos_t pos, size_t size, const void *data);
+
+	// Callback for reading from the file
+	size_t (*callback_read)(struct __file *, fpos_t pos, size_t size, void *data);
+
+	// Callback for determining the length of the file
+	size_t (*callback_length)(struct __file *);
 
 	// Next file in linked list of files.
 	struct __file *next;
@@ -69,7 +76,7 @@ typedef struct __file {
 #define EOF (-1)
 #define SEEK_SET 0
 #define SEEK_CUR 1
-#define SEEK_END
+#define SEEK_END 2
 
 #define _IOFBF 0
 #define _IOLBF 1
@@ -79,9 +86,9 @@ typedef struct __file {
 
 //- Standard Streams -----------------------------------------------------------
 
-extern FILE *stdout;
-extern FILE *stdin;
-extern FILE *stderr;
+FILE *stdout;
+FILE *stdin;
+FILE *stderr;
 
 //- File List ------------------------------------------------------------------
 
@@ -111,33 +118,40 @@ void rewind(FILE *stream);
 #define fsetpos(fp, ptr) (fp->position = *ptr)
 
 #define getc(stream)    fgetc(stream)
-#define getchar         getc(stdin)
+#define getchar()       fgetc(stdin)
+#define gets(str)       fgets(str, INT32_MAX, stdin)
 
+#define puts(str)       fputs(str, stdout)
 #define putc(c, stream) fputc(c, stream)
-#define putchar(c)      putc(c, stdin)
+#define putchar(c)      putc(c, stdout)
 
 int fflush(FILE *fp);
 
 int fgetc(FILE *fp);
-char *fgets(char *string, int length, FILE *stream);
-char *gets(char *str);
-size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
+int fgets(char *string, int length, FILE *stream);
+size_t fread(void *ptr, size_t size, size_t count, FILE *stream);
 
 int fputc(int c, FILE *fp);
 int fputs(const char *str, FILE *stream);
 size_t fwrite(const void *array, size_t size, size_t count, FILE *stream);
 
 int fprintf(FILE *stream, const char *format, ...);
+int vfprintf(FILE *stream, const char *format, va_list args);
 int printf(const char *format, ...);
 int sprintf(char *str, const char *format, ...);
+int vsprintf(char *buffer, const char *format, va_list args);
+char *vsaprintf(const char *format, va_list args);
 
 int fseek(FILE *stream, long offset, int origin);
 
-//- Messages -------------------------------------------------------------------
+//- Helper Functions -----------------------------------------------------------
 
-// Helper functions
-void __stdio_write(uint64_t descr, uint64_t pos, size_t size, const void *data);
-size_t __stdio_read(uint64_t descr, uint64_t pos, size_t size, void *data);
+void __stdio_write(FILE *stream, size_t size, const void *data);
+size_t __stdio_read(FILE *stream, size_t size, void *data);
+
+char *__format(const char **format, va_list args);
+
+//- Messages -------------------------------------------------------------------
 
 // API identifiers
 #define STDIO_API_LOW  0x17cb381ae4834502

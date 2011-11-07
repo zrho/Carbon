@@ -16,15 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#include <stdio.h>
+#include <carbon/mutex.h>
 
-static char __heap[0x1000];
-static uintptr_t __placement = (uintptr_t) &__heap;
+int fflush(FILE *fp) {
+    // Lock the file
+    mutex_lock(&fp->lock);
 
-// TODO: Implement real malloc
+    // When no write handler is given, discard the buffer
+    if (0 == fp->callback_write) {
+        fp->buffer_len = 0;
+        mutex_unlock(&fp->lock);
+        return 0;
+    }
 
-void *malloc(size_t size) {
-	uintptr_t addr = __placement;
-	__placement += size;
-	return (void *) addr;
+    // Write the buffer
+    __stdio_write(fp, fp->buffer_len, fp->buffer);
+
+    // And discard it
+    fp->buffer_len = 0;
+
+    // Unlock the file
+    mutex_unlock(&fp->lock);
+    return 0;
 }

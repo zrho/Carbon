@@ -16,15 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-static char __heap[0x1000];
-static uintptr_t __placement = (uintptr_t) &__heap;
-
-// TODO: Implement real malloc
-
-void *malloc(size_t size) {
-	uintptr_t addr = __placement;
-	__placement += size;
-	return (void *) addr;
+int fputs(const char *str, FILE *stream) {
+    fwrite(str, strlen(str), sizeof(char), stream);
+    return 0;
 }

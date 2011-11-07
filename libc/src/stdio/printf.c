@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 
-static char __heap[0x1000];
-static uintptr_t __placement = (uintptr_t) &__heap;
+int printf(const char *format, ...) {
+    va_list args;
 
-// TODO: Implement real malloc
+    va_start(args, format);
+    int ret = vfprintf(stdout, format, args);
+    va_end(args);
 
-void *malloc(size_t size) {
-	uintptr_t addr = __placement;
-	__placement += size;
-	return (void *) addr;
+    return ret;
 }

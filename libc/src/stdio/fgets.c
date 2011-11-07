@@ -16,15 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#include <stdio.h>
 
-static char __heap[0x1000];
-static uintptr_t __placement = (uintptr_t) &__heap;
+int fgets(char *string, int length, FILE *stream) {
+    size_t offset;
 
-// TODO: Implement real malloc
+    for (offset = 0; offset < length - 1; ++offset) {
+        // Read single char
+        int c = fgetc(stream);
 
-void *malloc(size_t size) {
-	uintptr_t addr = __placement;
-	__placement += size;
-	return (void *) addr;
+        // Is EOF?
+        if (-1 == c) break;
+
+        // Set char
+        string[offset] = (char) c;
+
+        // Is newline?
+        if ('\n' == (char) c) {
+            ++offset;
+            break;
+        }
+    }
+
+    string[offset] = 0;
+    return 0;
 }

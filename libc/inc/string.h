@@ -47,6 +47,9 @@ int strncmp(const char *a, const char *b, size_t num);
 size_t strlen (const char *str);
 char *strdup (const char *str);
 
+size_t strlcat(char *, const char *, size_t);
+char *strvcat(const char *, ...);
+
 //- String - Advanced ----------------------------------------------------------
 
 char *strchr (const char *str, char chr);

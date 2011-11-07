@@ -16,15 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#include <stdio.h>
 
-static char __heap[0x1000];
-static uintptr_t __placement = (uintptr_t) &__heap;
+void __stdio_write(FILE *stream, size_t size, const void *data) {
+    // Check callback
+    if (0 == stream->callback_write)
+        return;
 
-// TODO: Implement real malloc
+    // Write data
+    stream->callback_write(
+            stream,
+            stream->position,
+            size,
+            data);
 
-void *malloc(size_t size) {
-	uintptr_t addr = __placement;
-	__placement += size;
-	return (void *) addr;
+    // Update position
+    stream->position += size;
 }

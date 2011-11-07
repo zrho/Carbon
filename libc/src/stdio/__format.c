@@ -246,7 +246,7 @@ static char *__format_double(long double value, int flags, int precision) {
 	return string;
 }
 
-char *__format(const char **_fmt, va_list *argp) {
+char *__format(const char **_fmt, va_list argp) {
 	int flags, type, length;
 	size_t width, precision;
 	const char *fmt = *_fmt;
@@ -286,7 +286,7 @@ char *__format(const char **_fmt, va_list *argp) {
 
 	/* read width */
 	if (*fmt == '*') {
-		width = va_arg(*argp, int);
+		width = va_arg(argp, int);
 		fmt++;
 	}
 	else if (isdigit(*fmt)) {
@@ -299,7 +299,7 @@ char *__format(const char **_fmt, va_list *argp) {
 		fmt++;
 
 		if (*fmt == '*') {
-			precision = va_arg(*argp, int);
+			precision = va_arg(argp, int);
 			fmt++;
 		}
 		else if (isdigit(*fmt)) {
@@ -340,6 +340,7 @@ char *__format(const char **_fmt, va_list *argp) {
 	case 'z': case 't':
 		length = LENGTH_LONG;
 		fmt++;
+		break;
 	case '\0':
 		return NULL;
 	}
@@ -391,14 +392,14 @@ char *__format(const char **_fmt, va_list *argp) {
 
 	/* read value */
 	switch (type) {
-	case TYPE_STRING:	val_s = va_arg(*argp, const char *); 	break;
-	case TYPE_CHAR:		val_c = va_arg(*argp, char); 			break;
+	case TYPE_STRING:	val_s = va_arg(argp, const char *); 	break;
+	case TYPE_CHAR:		val_c = va_arg(argp, char); 			break;
 	case TYPE_LITERAL:	val_c = '%';							break;
-	case TYPE_INT:		val_i = va_arg(*argp, int);				break;
-	case TYPE_UINT:		val_u = va_arg(*argp, unsigned int);	break;
+	case TYPE_INT:		val_i = va_arg(argp, int);				break;
+	case TYPE_UINT:		val_u = va_arg(argp, unsigned int);	break;
 	case TYPE_DOUBLE:
-		if (length == LENGTH_LLONG)	val_d = va_arg(*argp, long double);
-		else						val_d = va_arg(*argp, double);
+		if (length == LENGTH_LLONG)	val_d = va_arg(argp, long double);
+		else						val_d = va_arg(argp, double);
 		break;
 	}
 

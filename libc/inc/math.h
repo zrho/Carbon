@@ -21,7 +21,7 @@
 
 /* general constants *******************************************************/
 
-#define INFINITY (1.0/0.0)
+#define INFINITY 0x7F800000 // Find a better way
 #define NAN (0.0/0.0)
 #define HUGE_VAL INFINITY
 
