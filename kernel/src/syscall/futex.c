@@ -119,8 +119,6 @@ void syscall_futex_cmp_requeue(cpu_int_state_t *state) {
     // Transfer threads
     thread_t *thread = process_current->threads;
 
-    DEBUG_HEX(transfer_count);
-
     while (0 != thread && transfer_count > 0) {
         // Is waiting on futex?
         if (thread->sleep_mode == THREAD_SLEEP_FUTEX &&

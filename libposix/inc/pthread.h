@@ -39,6 +39,8 @@
 #define PTHREAD_H
 
 #include <sys/types.h>
+#include <carbon/mutex.h>
+#include <carbon/futex.h>
 
 //
 // Basic types
@@ -161,8 +163,8 @@ typedef struct pthread_mutexattr pthread_mutexattr_t;
 
 struct pthread_mutex
 {
-  uint8_t lock;
-  uint8_t lock_struct;             // 1 locked, 0 unlocked
+  mutex_t lock;
+  mutex_t lock_struct;             // 1 locked, 0 unlocked
 
   long recursion;           // Number of unlocks a thread needs to perform
                             // before the lock is released (recursive mutexes only)
@@ -185,8 +187,8 @@ typedef struct pthread_condattr pthread_condattr_t;
 
 struct pthread_cond
 {
-  int waiting;
-  handle_t semaphore;
+  pthread_mutex_t *mutex;
+  futex_t seq;
 };
 
 typedef struct pthread_cond pthread_cond_t;
