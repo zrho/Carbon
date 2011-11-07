@@ -67,7 +67,7 @@ int pthread_mutex_lock(pthread_mutex_t *mutex) {
 	mutex->owner = pthread_self();
 
 	// Unlock structure
-	mutex_lock(&mutex->lock_struct);
+	mutex_unlock(&mutex->lock_struct);
 
 	return 0;
 }

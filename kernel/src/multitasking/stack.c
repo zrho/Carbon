@@ -26,14 +26,9 @@
 //- Stack ----------------------------------------------------------------------
 
 void stack_create(stack_t *stack, process_t *process) {
-	DEBUG("Creating stack: ");
-
     stack->address = MEMORY_USER_STACK_VADDR + process->stack_offset + STACK_LENGTH_MAX;
     process->stack_offset += STACK_LENGTH_MAX;
     stack->length = 0;
-
-    DEBUG_HEX(stack->address);
-    DEBUG("\n");
 
     if (UNLIKELY(stack->address >= MEMORY_USER_STACK_VADDR + STACK_PROCESS_MAX))
         PANIC("Exceeded maximum number of stacks per process.");
@@ -74,16 +69,7 @@ void stack_resize(stack_t *stack, uintptr_t new_len, process_t *process) {
 
         for (reg_addr = stack->address - new_len; reg_addr < reg_end; reg_addr += PAGE_SIZE) {
         	uintptr_t phys = frame_alloc();
-        	DEBUG("Stack: MMap ");
-        	DEBUG_HEX(reg_addr);
-        	DEBUG(" -> ");
-        	DEBUG_HEX(phys);
-        	DEBUG(" [");
-        	DEBUG_HEX(flags);
-        	DEBUG(", ");
             memory_map(reg_addr, phys, flags);
-            DEBUG_HEX(*((uint64_t *) (stack->address - 0x8)));
-            DEBUG("]\n");
         }
 
     } else if (new_len < stack->length) {
