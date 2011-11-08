@@ -1,6 +1,6 @@
 OUTPUT_FORMAT(elf64-x86-64)
 KERNEL_VMA = 0x100000;
-ENTRY(_main)
+ENTRY(_start)
 SECTIONS
 {
     . = KERNEL_VMA;

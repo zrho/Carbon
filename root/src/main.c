@@ -19,35 +19,62 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
+#include <stdio.h>
 #include <pthread.h>
 #include <carbon/thread.h>
+#include <carbon/futex.h>
 
-extern void debug(const char *msg);
-extern void debug_hex(uint64_t num);
+#define A_0 1.0
+#define B_0 1.0 / sqrt(2.0)
+#define T_0 1.0 / 4.0
+#define P_0 1.0
 
-void *worker(void *number_ptr) {
-	uintptr_t number = *((uintptr_t *) number_ptr);
-	return (void *) (number * 2);
+typedef struct request_t {
+    int iterations;
+    double result;
+} request_t;
+
+void *worker(void *_req) {
+    // Calculate rounds
+    request_t *req = (request_t *) _req;
+    int i = req->iterations;
+
+    printf("Worker started (%d iterations).\n", i);
+
+    double a = A_0;
+    double b = B_0;
+    double t = T_0;
+    double p = P_0;
+
+    for (; i > 0; --i) {
+        double a_new = (a + b) / 2;
+        double b_new = sqrt(a * b);
+        double t_new = t - p * pow(a - a_new, 2);
+        double p_new = 2 * p;
+
+        a = a_new;
+        b = b_new;
+        t = t_new;
+        p = p_new;
+    }
+
+    req->result = pow(a + b, 2) / (4 * t);
+	return &req->result;
 }
 
 int main(void) {
 	pthread_t worker_tid;
-	uintptr_t arg, result;
+	request_t request;
+	double *result_ptr;
 
-	arg = 0x80;
-	result = 0;
+	request.iterations = 2;
 
-	pthread_create(&worker_tid, 0, &worker, &arg);
-
-	debug("Thread created: [tid = ");
-	debug_hex(worker_tid);
-	debug("]\n");
-
-	pthread_join(worker_tid, (void **) &result);
-
-	debug("Result: ");
-	debug_hex(result);
-	debug("\n");
+	printf("Creating worker...\n");
+	pthread_create(&worker_tid, 0, &worker, (void *) &request);
+	pthread_join(worker_tid, (void *) &result_ptr);
+	printf("Result received.\n");
+	printf("Result: %f\n", *result_ptr);
 
     return 0;
 }

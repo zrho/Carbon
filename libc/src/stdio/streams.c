@@ -21,3 +21,10 @@
 FILE *stdout;
 FILE *stderr;
 FILE *stdin;
+
+FILE _stdout;
+FILE _stderr;
+FILE _stdin;
+
+char _stdout_buf[512];
+char _stderr_buf[512];

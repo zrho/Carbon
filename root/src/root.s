@@ -14,9 +14,3 @@ debug_hex:
     xchg rbx, rdi
     int 0x80
     ret
-
-global _main
-extern main
-_main:
-	call main
-	jmp $
