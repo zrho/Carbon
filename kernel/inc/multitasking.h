@@ -187,7 +187,7 @@ typedef struct process_t {
 
 //- Stack ----------------------------------------------------------------------
 
-#define STACK_LENGTH_MAX 0x200000
+#define STACK_LENGTH_MAX (0x200000 - 0x1000) // -1 page as guard to prevent overflows
 #define STACK_PROCESS_MAX 0x8000000000
 
 void stack_create(stack_t *stack, process_t *process);
