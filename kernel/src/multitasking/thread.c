@@ -267,13 +267,15 @@ void thread_join_awake(thread_t *thread, thread_t *wait_for) {
 }*/
 
 static void _thread_idle(cpu_int_state_t *state) {
+    extern uint8_t stack_runtime_top;
+
     // No current thread or process
     process_current = 0;
     thread_current = 0;
 
     // Idle state initialized?
     if (0 == _thread_state_idle.rip) {
-        _thread_state_idle.rsp = _thread_state_idle.state.rbp = 0;
+        _thread_state_idle.rsp = _thread_state_idle.state.rbp = (uintptr_t) &stack_runtime_top;
         _thread_state_idle.flags |= (1 << 9); // Enable interrupts
         _thread_state_idle.rip = (uintptr_t) &idle;
 

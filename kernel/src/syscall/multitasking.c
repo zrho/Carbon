@@ -169,8 +169,6 @@ void syscall_process_exit(cpu_int_state_t *state) {
 
     // Switch thread
 	SYSCALL_SWITCH_THREAD;
-
-    SYSCALL_RETURN_SUCCESS;
 }
 
 void syscall_thread_spawn(cpu_int_state_t *state) {
