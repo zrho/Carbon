@@ -18,23 +18,6 @@
 #include <float.h>
 #include <stdint.h>
 
-/* If GCC/CLang builtins are available, use them */
-#ifdef __GNUC__
-
-float modff(float x, float *iptr) {
-	return __builtin_modff(x, iptr);
-}
-
-double modf(double x, double *iptr) {
-	return __builtin_modf(x, iptr);
-}
-
-long double modfl(long double x, long double *iptr) {
-	return __builtin_modfl(x, iptr);
-}
-
-#else
-
 float modff(float x, float *iptr) {
 	if (fabsf(x) >= 8388608.0) {
 		*iptr = x;
@@ -79,5 +62,3 @@ long double modfl(long double x, long double *iptr) {
 		return (x - *iptr);
 	}
 }
-
-#endif

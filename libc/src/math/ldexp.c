@@ -17,23 +17,6 @@
 #include <math.h>
 #include <float.h>
 
-/* If GCC/CLang builtins are available, use them */
-#ifdef __GNUC__
-
-float ldexpf(float x, int n) {
-	return __builtin_ldexpf(x, n);
-}
-
-double ldexp(double x, int n) {
-	return __builtin_ldexp(x, n);
-}
-
-long double ldexpl(long double x, int n) {
-	return __builtin_ldexpl(x, n);
-}
-
-#else
-
 float ldexpf(float x, int n) {
 	return (x * powf(2.0, (float) n));
 }
@@ -45,5 +28,3 @@ double ldexp(double x, int n) {
 long double ldexpl(long double x, int n) {
 	return (x * powl(2.0, (long double) n));
 }
-
-#endif

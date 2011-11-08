@@ -17,22 +17,6 @@
 #include <math.h>
 #include <float.h>
 
-/* If GCC/CLang builtins are available, use them */
-#ifdef __GNUC__
-
-float floorf(float x) {
-	return __builtin_floorf(x);
-}
-
-double floor(double x) {
-	return __builtin_floor(x);
-}
-
-long double floorl(long double x) {
-	return __builtin_floorl(x);
-}
-
-#else
 
 float floorf(float x) {
 	modff(x, &x);
@@ -51,5 +35,3 @@ long double floorl(long double x) {
 	if (x < 0.0) x -= 1.0;
 	return x;
 }
-
-#endif

@@ -17,23 +17,6 @@
 #include <math.h>
 #include <float.h>
 
-/* If GCC/CLang builtins are available, use them */
-#ifdef __GNUC__
-
-float logf(float x) {
-	return __builtin_logf(x);
-}
-
-double log(double x) {
-	return __builtin_log(x);
-}
-
-long double logl(long double x) {
-	return __builtin_logl(x);
-}
-
-#else
-
 float logf(float x) {
 	float y, y_old, ey, epsilon;
 
@@ -129,5 +112,3 @@ long double logl(long double x) {
 
 	return y;
 }
-
-#endif

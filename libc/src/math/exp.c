@@ -20,23 +20,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-/* If GCC/CLang builtins are available, use them */
-#ifdef __GNUC__
-
-float expf(float x) {
-	return __builtin_expf(x);
-}
-
-double exp(double x) {
-	return __builtin_exp(x);
-}
-
-long double expl(long double x) {
-	return __builtin_expl(x);
-}
-
-#else
-
 #define M_E2 	(M_E * M_E)
 #define M_E4 	(M_E2 * M_E2)
 #define M_E8	(M_E4 * M_E4)
@@ -161,8 +144,10 @@ static double _dbl_inv_fact[] = {
 	1.0 / 6402373705728000.0,	// 1 / 18!
 };
 
+#include <stdio.h>
+
 double exp(double x) {
-	size_t int_part;
+	uint32_t int_part;
 	bool invert;
 	double value;
 	double x0;
@@ -180,10 +165,10 @@ double exp(double x) {
 	}
 
 	/* extract integer component */
-	int_part = (size_t) x;
+	int_part = (uint32_t) floor(x);
 
 	/* set x to fractional component */
-	x -= (double) int_part;
+	x -= floor(x);
 
 	/* perform Taylor series approximation with nineteen terms */
 	value = 0.0;
@@ -192,7 +177,7 @@ double exp(double x) {
 		value += x0 * _dbl_inv_fact[i];
 		x0 *= x;
 	}
-	
+
 	/* multiply by exp of the integer component */
 	value *= _expi(int_part);
 
@@ -268,5 +253,3 @@ long double expl(long double x) {
 		return value;
 	}
 }
-
-#endif

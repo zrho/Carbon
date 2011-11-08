@@ -17,11 +17,9 @@
 #ifndef MATH_H
 #define MATH_H
 
-#undef __GNUC__
-
 /* general constants *******************************************************/
 
-#define INFINITY 0x7F800000 // Find a better way
+#define INFINITY __builtin_inf()
 #define NAN (0.0/0.0)
 #define HUGE_VAL INFINITY
 

@@ -17,23 +17,6 @@
 #include <math.h>
 #include <float.h>
 
-/* If GCC/CLang builtins are available, use them */
-#ifdef __GNUC__
-
-float fmodf(float x, float div) {
-	return __builtin_fmodf(x, div);
-}
-
-double fmod(double x, double div) {
-	return __builtin_fmod(x, div);
-}
-
-long double fmodl(long double x, long double div) {
-	return __builtin_fmodl(x, div);
-}
-
-#else
-
 float fmodf(float x, float div) {
 	float n0;
 
@@ -63,5 +46,3 @@ long double fmodl(long double x, long double div) {
 
 	return x;
 }
-
-#endif

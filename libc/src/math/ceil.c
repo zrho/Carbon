@@ -17,23 +17,6 @@
 #include <math.h>
 #include <float.h>
 
-/* If GCC/CLang builtins are available, use them */
-#ifdef __GNUC__
-
-float ceilf(float x) {
-	return __builtin_ceilf(x);
-}
-
-double ceil(double x) {
-	return __builtin_ceil(x);
-}
-
-long double ceill(long double x) {
-	return __builtin_ceill(x);
-}
-
-#else
-
 float ceilf(float x) {
 	modff(x, &x);
 	if (x > 0.0) x += 1.0;
@@ -51,5 +34,3 @@ long double ceill(long double x) {
 	if (x > 0.0) x += 1.0;
 	return x;
 }
-
-#endif

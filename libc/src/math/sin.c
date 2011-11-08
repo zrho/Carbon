@@ -19,23 +19,6 @@
 #include <float.h>
 #include <math.h>
 
-/* If GCC/CLang builtins are available, use them */
-#ifdef __GNUC__
-
-float sinf(float x) {
-	return __builtin_sinf(x);
-}
-
-double sin(double x) {
-	return __builtin_sin(x);
-}
-
-long double sinl(long double x) {
-	return __builtin_sinl(x);
-}
-
-#else
-
 static float _flt_inv_fact[] = {
 	1.0 / 1.0,			// 1 / 1!
 	1.0 / 6.0,			// 1 / 3!
@@ -166,5 +149,3 @@ long double sinl(long double x) {
 
 	return sin_x;
 }
-
-#endif
