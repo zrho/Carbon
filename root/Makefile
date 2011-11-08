@@ -10,8 +10,7 @@ TARGET_BIN_DIR			:= $(TARGET_DIR)/bin
 TARGET_HEADER_DIR		:= $(TARGET_DIR)/inc
 TARGET_BIN				:= $(TARGET_BIN_DIR)/$(SUBPROJECT).bin
 
-LIBRARIES				:= $(TARGET_BIN_DIR)/libposix.a
-LIBRARIES				+= $(TARGET_BIN_DIR)/libc.a
+LIBRARIES				:= $(TARGET_BIN_DIR)/libc.a
 
 # Definitions - Toolchain
 ASM						:= nasm

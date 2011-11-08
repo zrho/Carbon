@@ -1,5 +1,5 @@
 .PHONY: all clean iso run
-.PHONY: kernel loader libc libposix root
+.PHONY: kernel loader libc root
 
 # Definitions - Directories and Files
 BUILD_DIR			:= build
@@ -50,10 +50,6 @@ libc: directories
 	@ echo " Building libc..."
 	@ $(MAKE) -C libc/ all
 	
-libposix: directories libc
-	@ echo " Building libposix..."
-	@ $(MAKE) -C libposix/ all
-	
 root: directories libc libposix
 	@ echo " Building root..."
 	@ $(MAKE) -C root/ all
@@ -63,7 +59,6 @@ clean:
 	@ $(MAKE) -C kernel/ clean
 	@ $(MAKE) -C loader/ clean
 	@ $(MAKE) -C libc/ clean
-	@ $(MAKE) -C libposix/ clean
 	@ $(MAKE) -C root/ clean
 	@ rm -R $(BUILD_DIR)/*
 	@ rm $(ISO_BIN_DIR)/*.bin
