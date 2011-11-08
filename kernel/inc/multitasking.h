@@ -27,6 +27,7 @@
 
 #define THREAD_FLAG_TERMINATED      (1 << 0)
 #define THREAD_FLAG_DETACHED        (1 << 1)
+#define THREAD_FLAG_FX_PREPARED     (1 << 2)
 
 #define THREAD_SLEEP_JOIN           1
 #define THREAD_SLEEP_MUTEX		    2

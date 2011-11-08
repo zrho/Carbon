@@ -33,6 +33,17 @@ fpu_init:
 
 	ret
 
+global fpu_prepare
+fpu_prepare:
+	; Set MXCSR.PM, MXCSR.UM, MXCSR.OM,
+	;     MXCSR.ZM and MXCSR.DM
+	stmxcsr dword [rsp - 4]
+	mov eax, dword [rsp - 4]
+	or rax, (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8)
+	mov dword [rsp - 4], eax
+	ldmxcsr dword [rsp - 4]
+	ret
+
 global fpu_save:
 fpu_save:
 	fxsave [rdi]

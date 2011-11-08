@@ -316,5 +316,11 @@ void thread_switch(thread_t *thread, cpu_int_state_t *state) {
 
         // Load FPU data
         fpu_load(thread_current->fx_data);
+
+        // Is FPU state prepared?
+        if (0 == (thread->flags & THREAD_FLAG_FX_PREPARED)) {
+            fpu_prepare();
+            thread->flags |= THREAD_FLAG_FX_PREPARED;
+        }
     }
 }

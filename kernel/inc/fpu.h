@@ -26,6 +26,11 @@
 void fpu_init(void);
 
 /**
+ * Prepares the current FPU state.
+ */
+void fpu_prepare(void);
+
+/**
  * Saves the SSE, x87 FPU and MMX states to the given region.
  *
  * The region must be 512 bytes in size and aligned on a 16 byte boundary.
