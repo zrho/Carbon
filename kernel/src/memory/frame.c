@@ -66,11 +66,13 @@ void frame_init(boot_info_t *info) {
 
 			uintptr_t addr_end = (mmap->address + mmap->length) & ~0xFFF;
 
-			// Add frames
-			uintptr_t addr;
+			if (addr_end >= mem_begin) {
+                // Add frames
+                uintptr_t addr;
 
-			for (addr = addr_begin; addr < addr_end; addr += 0x1000) {
-				frame_free(addr);
+                for (addr = addr_begin; addr < addr_end; addr += 0x1000) {
+                    frame_free(addr);
+                }
 			}
 		}
 

@@ -37,10 +37,10 @@
 #define PAGE_OFFSET_PT              0xFFFFFF8000000000
 
 #define PAGE_VIRT_PML4              PAGE_OFFSET_PML4
-#define PAGE_VIRT_PDP(pdp)          (PAGE_OFFSET_PDP | (pdp << 12))
-#define PAGE_VIRT_PD(pdp, pd)       (PAGE_OFFSET_PD | (pdp << 21) | (pd << 12))
-#define PAGE_VIRT_PT(pdp, pd, pt)   (PAGE_OFFSET_PT | (pdp << 30) | (pd << 21) \
-                                    | (pt << 12))
+#define PAGE_VIRT_PDP(pdp)          (PAGE_OFFSET_PDP | ((uint64_t) pdp << 12))
+#define PAGE_VIRT_PD(pdp, pd)       (PAGE_OFFSET_PD | ((uint64_t) pdp << 21) | ((uint64_t) pd << 12))
+#define PAGE_VIRT_PT(pdp, pd, pt)   (PAGE_OFFSET_PT | ((uint64_t) pdp << 30) | ((uint64_t) pd << 21) \
+                                    | ((uint64_t) pt << 12))
                                     
 #define PAGE_VIRT_PML4E(i)          (PAGE_VIRT_PML4 + i * 8)
 #define PAGE_VIRT_PDPE(pdp, i)      (PAGE_VIRT_PDP(pdp) + i * 8)
@@ -105,6 +105,7 @@ static void _memory_page_alloc_frame(uint64_t *page, uint16_t flags, uintptr_t v
     uintptr_t frame = frame_alloc();
     _memory_map(page, frame, flags);
     _memory_invalidate(virt);
+    memset((void *) virt, 0, 0x1000);
 }
 
 static bool _memory_struct_exists(

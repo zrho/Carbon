@@ -33,14 +33,18 @@ void fault_gp(cpu_int_state_t *state) {
     if (state->cs == 0x8) {
         console_print("PANIC: General Protection Fault in kernel at ");
         console_print_hex(state->rip);
-        console_print(".\n");
+        console_print(" (error code: ");
+        console_print_hex(state->error_code);
+        console_print(").\n");
         while (1);
     }
 
     // TODO: Remove this debug warning
     DEBUG("General Protection Fault at ");
     DEBUG_HEX(state->rip);
-    DEBUG(".\n");
+    DEBUG(" (error code: ");
+    DEBUG_HEX(state->error_code);
+    DEBUG(").\n");
 
     // Terminate process
     process_terminate(process_current->pid);

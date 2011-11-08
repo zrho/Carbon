@@ -63,6 +63,7 @@ cpu_tss_load:
 
 global idle
 idle:
+  sti
   hlt
   jmp idle
 
