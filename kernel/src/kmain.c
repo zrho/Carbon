@@ -91,6 +91,7 @@ static void kmain_init() {
     cpu_int_init(); // Initializes the IDT to handle interrupts
     cpu_int_enable(); // Enables interrupts
     cpu_tss_create(); // For UserMode to Kernel interrupts
+    fault_install(); // Install fault handlers
 
     // FPU
     DEBUG("Initializing floating point unit...\n");

@@ -64,7 +64,6 @@ void cpu_int_init() {
  *
  * Called by cpu_int_handler_common.
  *
- * @todo: Move the #PF and #GP handlers to separate handler function.
  * @param state The state the processor has been interrupted in. May be modified
  *  to alter the return state.
  */
@@ -72,18 +71,6 @@ void cpu_int_handle(cpu_int_state_t *state);
 void cpu_int_handle(cpu_int_state_t *state) {
     // TODO: Make this faster!
     cpu_int_handler_t handler = (&cpu_int_handlers)[state->vector];
-
-    if (14 == state->vector) {
-        DEBUG("PANIC: Page Fault (address ");
-        DEBUG_HEX(state->state.r15);
-        DEBUG(") caused by ");
-        DEBUG_HEX(state->rip);
-        DEBUG(".\n");
-        while (1);
-    }
-
-    if (13 == state->vector)
-        PANIC("General Protection Fault!");
 
     if (0 == handler)
         return;
