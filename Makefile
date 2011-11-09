@@ -30,7 +30,7 @@ run: iso
 	$(EMU) $(EMU_FLAGS)
 
 # Targets - Build
-all: kernel loader libc libposix root
+all: kernel loader libc root
 
 directories:
 	@ mkdir -p $(BUILD_DIR)/kernel/inc
@@ -50,7 +50,7 @@ libc: directories
 	@ echo " Building libc..."
 	@ $(MAKE) -C libc/ all
 	
-root: directories libc libposix
+root: directories libc
 	@ echo " Building root..."
 	@ $(MAKE) -C root/ all
 	
