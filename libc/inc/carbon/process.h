@@ -21,6 +21,8 @@
 
 //- API - Multitasking - Process -----------------------------------------------
 
+#define PROCESS_MAX 1024
+
 /**
  * Type for process ids.
  */

@@ -23,6 +23,8 @@
 
 //- API - Multitasking - Thread ------------------------------------------------
 
+#define THREAD_MAX 1024
+
 #define THREAD_CANCEL_REASON_EXPLICIT 0
 #define THREAD_CANCEL_REASON_RETURN   1
 

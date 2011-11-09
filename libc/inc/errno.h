@@ -17,10 +17,12 @@
 #ifndef ERRNO_H_
 #define ERRNO_H_
 
+#include <carbon/thread.h>
+
 //- Errno ----------------------------------------------------------------------
 
-// TODO: Make this thread safe!
-int errno;
+#define errno (__errno[thread_id()])
+extern int __errno[THREAD_MAX];
 
 //- Error Codes ----------------------------------------------------------------
 
