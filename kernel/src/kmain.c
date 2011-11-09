@@ -27,6 +27,7 @@
 #include <multitasking.h>
 #include <binary.h>
 #include <syscall.h>
+#include <fault.h>
 #include <fpu.h>
 
 static boot_info_t *info;
@@ -97,6 +98,11 @@ static void kmain_init() {
     DEBUG("Initializing floating point unit...\n");
 
     fpu_init();
+
+    // Multitasking
+    DEBUG("Initializing multitasking...\n");
+
+    process_init();
 
     // System calls
     cpu_int_register(SYSCALL_INT_VECTOR, &syscall_handler_int);

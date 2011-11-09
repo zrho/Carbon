@@ -18,6 +18,7 @@
 
 #include <api/types.h>
 #include <api/string.h>
+#include <api/map.h>
 #include <fpu.h>
 #include <multitasking.h>
 #include <memory.h>
@@ -26,10 +27,25 @@
 
 //- Thread ---------------------------------------------------------------------
 
+#define THREAD_MAP(pid) ((thread_t **) (MEMORY_THREAD_MAP_VADDR + (pid * THREAD_MAP_SIZE)))
+
 thread_t *thread_current = 0;
 process_t *process_current = 0;
+
 extern uint8_t idle;
 static cpu_int_state_t _thread_state_idle;
+
+static uint32_t _thread_id_next(uint32_t pid) {
+    thread_t **map = THREAD_MAP(pid);
+    uint32_t tid;
+
+    for (tid = 0; tid < THREAD_MAX; ++tid)
+        if (0 == map[tid])
+            return tid;
+
+    PANIC("Maximum number of threads reached.");
+    return -1;
+}
 
 thread_t *thread_spawn(process_t *process, uintptr_t entry_point) {
     // Create thread structure
@@ -37,7 +53,7 @@ thread_t *thread_spawn(process_t *process, uintptr_t entry_point) {
     memset(thread, 0, sizeof(thread_t));
 
     // Fill structure
-    thread->tid = process->tid_next++;
+    thread->tid = _thread_id_next(process->pid);
     thread->pid = process->pid;
     thread->frozen = 1;
     thread->entry_point = entry_point;
@@ -57,6 +73,9 @@ thread_t *thread_spawn(process_t *process, uintptr_t entry_point) {
     //  aligned to 16 bytes).
     thread->fx_data = heap_alloc(512);
 
+    // Add to map
+    THREAD_MAP(process->pid)[thread->tid] = thread;
+
     // Add to list
     thread->next = process->threads;
     process->threads = thread;
@@ -65,16 +84,10 @@ thread_t *thread_spawn(process_t *process, uintptr_t entry_point) {
 }
 
 thread_t *thread_get(process_t *process, uint32_t tid) {
-    thread_t *thread = process->threads;
+    if (tid >= THREAD_MAX)
+        return 0;
 
-    while (0 != thread) {
-        if (tid == thread->tid)
-            return thread;
-
-        thread = thread->next;
-    }
-
-    return 0;
+    return THREAD_MAP(process->pid)[tid];
 }
 
 void thread_stop(process_t *process, thread_t *thread) {
@@ -153,14 +166,17 @@ void thread_free(process_t *process, uint32_t tid) {
     if (0 == thread || 0 == (thread->flags & THREAD_FLAG_TERMINATED))
         return;
 
-    // Free structure
-    heap_free(thread);
+    // Remove from map
+    THREAD_MAP(process->pid)[tid] = 0;
 
     // Remove from process
     if (0 == thread_prev)
         process->threads = thread->next;
     else
         thread_prev->next = thread->next;
+
+    // Free structure
+    heap_free(thread);
 }
 
 void thread_dispose_all(process_t *process) {

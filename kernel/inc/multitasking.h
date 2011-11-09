@@ -163,11 +163,6 @@ typedef struct process_t {
     uint8_t term_implicit;
 
     /**
-     * The thread id that will be assigned to the next thread.
-     */
-    uint32_t tid_next;
-
-    /**
      * The process's threads.
      */
     thread_t *threads;
@@ -196,14 +191,21 @@ void stack_resize(stack_t *stack, uintptr_t new_len, process_t *process);
 
 //- Processes ------------------------------------------------------------------
 
+#define PROCESS_MAX         1024
+#define PROCESS_MAP_SIZE    (PROCESS_MAX * sizeof(uintptr_t))
+
 process_t *process_list;
 process_t *process_current;
 
+void process_init(void);
 process_t *process_spawn(uintptr_t addr_space, process_t *parent);
 process_t *process_get(uint32_t pid);
 void process_terminate(uint32_t pid);
 
 //- Thread ---------------------------------------------------------------------
+
+#define THREAD_MAX          1024
+#define THREAD_MAP_SIZE     (THREAD_MAX * sizeof(uintptr_t))
 
 thread_t *thread_current;
 
