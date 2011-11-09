@@ -138,14 +138,14 @@ void process_terminate(uint32_t pid) {
     else
         proc_prev->next = proc->next;
 
-    // Dispose thread map
-    _process_dispose_thread_map(pid);
-
     // Remove from map
     process_map[pid] = 0;
 
     // Stop and free all threads
     thread_dispose_all(proc);
+
+    // Dispose thread map
+    _process_dispose_thread_map(pid);
 
     // Free process structure
     heap_free(proc);
