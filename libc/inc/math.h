@@ -1,32 +1,60 @@
-/*
- * Copyright (C) 2009-2011 Nick Johnson <nickbjohnson4224 at gmail.com>
+/**
+ * Carbon Operating System
+ * Copyright (C) 2011 Lukas Heidemann
  *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef MATH_H
 #define MATH_H
 
-/* general constants *******************************************************/
+#include <float.h>
 
-#define INFINITY __builtin_inf()
-#define NAN (0.0/0.0)
-#define HUGE_VAL INFINITY
+//- Special Values -------------------------------------------------------------
+
+#define INFINITY        (1.0/0.0)
+#define NAN             (0.0/0.0)
+
+#define HUGE_VAL        INFINITY
+#define HUGE_VALF       INFINITY
+#define HUGE_VALL       INFINITY
+
+#define MAXFLOAT        FLT_MAX
 
 #define isnan(x) ((x) != (x))
 #define isinf(x) (((x) == INFINITY) || ((x) == -INFINITY))
 
-/* general functions *******************************************************/
+//- Exponential and Logarithmic Constants --------------------------------------
+
+#define M_E        2.7182818284590452353602874713526625
+#define M_SQRT2    1.4142135623730950488016887242096981
+#define M_SQRT1_2  0.7071067811865475244008443621048490
+#define M_LOG2E    1.4426950408889634073599246810018921
+#define M_LOG10E   0.4342944819032518276511289189166051
+#define M_LN2      0.6931471805599453094172321214581765
+#define M_LN10     2.3025850929940456840179914546843642
+
+//- Trigonometric Constants ----------------------------------------------------
+
+#define M_PI       3.1415926535897932384626433832795029
+#define M_PI_2     1.5707963267948966192313216916397514
+#define M_PI_4     0.7853981633974483096156608458198757
+#define M_1_PI     0.3183098861837906715377675267450287
+#define M_2_PI     0.6366197723675813430755350534900574
+#define M_2_SQRTPI 1.1283791670955125738961589031215452
+
+//- General Floating-Point Manipulation Functions ------------------------------
 
 float       ceilf (float x);
 double      ceil  (double x);
@@ -48,17 +76,7 @@ float       fmodf (float x, float div);
 double      fmod  (double x, double div);
 long double fmodl (long double x, long double div);
 
-/* exponential and logarithmic constants ***********************************/
-
-#define M_E        2.7182818284590452353602874713526625
-#define M_SQRT2    1.4142135623730950488016887242096981
-#define M_SQRT1_2  0.7071067811865475244008443621048490
-#define M_LOG2E    1.4426950408889634073599246810018921
-#define M_LOG10E   0.4342944819032518276511289189166051
-#define M_LN2      0.6931471805599453094172321214581765
-#define M_LN10     2.3025850929940456840179914546843642
-
-/* exponential and logarithmic functions ***********************************/
+//- Exponential and Logarithmic Functions --------------------------------------
 
 float       powf  (float b, float e);
 double      pow   (double b, double e);
@@ -92,16 +110,7 @@ float       frexpf(float x, int *exp);
 double      frexp (double x, int *exp);
 long double frexpl(long double x, int *exp);
 
-/* trigonometric constants *************************************************/
-
-#define M_PI       3.1415926535897932384626433832795029
-#define M_PI_2     1.5707963267948966192313216916397514
-#define M_PI_4     0.7853981633974483096156608458198757
-#define M_1_PI     0.3183098861837906715377675267450287
-#define M_2_PI     0.6366197723675813430755350534900574
-#define M_2_SQRTPI 1.1283791670955125738961589031215452
-
-/* trigonometric functions *************************************************/
+//- Trigonometric Functions ----------------------------------------------------
 
 float       sinf  (float x);
 double      sin   (double x);
@@ -142,7 +151,5 @@ long double coshl (long double x);
 float       tanhf (float x);
 double      tanh  (double x);
 long double tanhl (long double x);
-
-/* GCC builtin math functions ***********************************************/
 
 #endif/*MATH_H*/

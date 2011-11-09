@@ -22,13 +22,12 @@
 // size_t
 #include <stdint.h>
 
-// ssize_t
 typedef int64_t ssize_t;
-
-// time_t
-typedef uint64_t time_t;
-
-// handle_t
 typedef uint32_t handle_t;
+
+typedef uint64_t time_t;
+typedef uint64_t timer_t;
+typedef uint64_t clock_t;
+typedef uint64_t clockid_t;
 
 #endif /* TYPES_H_ */
