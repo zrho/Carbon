@@ -2,5 +2,6 @@
 /*/build
 /bochsout.txt
 /run.sh
+/kernel/iso/boot/*.bin
 .project
 .cproject
