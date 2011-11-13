@@ -49,6 +49,7 @@ void _init(void) {
 
     // Initialize stdout
     stdout = &_stdout;
+    stdout->descriptor = STDOUT_FILENO;
     stdout->lock = 0;
     stdout->position = 0;
     stdout->flags = 0;
@@ -64,6 +65,7 @@ void _init(void) {
     // Initialize stderr
     stderr = &_stderr;
     memcpy(stderr, stdout, sizeof(FILE));
+    stderr->descriptor = STDERR_FILENO;
     stderr->callback_write = &__stderr_write;
     stderr->buffer = &_stderr_buf;
 

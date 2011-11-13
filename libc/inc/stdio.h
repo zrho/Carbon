@@ -78,6 +78,10 @@ typedef struct __file {
 #define SEEK_CUR 1
 #define SEEK_END 2
 
+#define STDIN_FILENO                        0
+#define STDOUT_FILENO                       1
+#define STDERR_FILENO                       2
+
 #define _IOFBF 0
 #define _IOLBF 1
 #define _IONBF 2
@@ -150,6 +154,7 @@ void __stdio_write(FILE *stream, size_t size, const void *data);
 size_t __stdio_read(FILE *stream, size_t size, void *data);
 
 char *__format(const char **format, va_list args);
+
 
 //- Messages -------------------------------------------------------------------
 
